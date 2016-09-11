@@ -1,29 +1,56 @@
-import twitter
+from rauth import OAuth1Service
 import json
-import twitter
-# Import my logins in sep file NOT uploaded to Github hehe
+import subprocess
 from mylogins import *
+#from mylogins import *
 
-auth = twitter.oauth.OAuth(OAUTH_TOKEN, OAUTH_TOKEN_SECRET, CONSUMER_KEY, CONSUMER_SECRET)
+#see mylogins.py for the data needed to get this working will follow the
+#following format.
 
-twitter_api = twitter.Twitter(auth=auth)
+#twitter = OAuth1Service(
+#    name = 'twitter',
+#    consumer_key = '',
+#    consumer_secret = '',
+#    request_token_url = 'https://api.twitter.com/oauth/request_token',
+#    access_token_url = 'https://api.twitter.com/oauth/access_token',
+#    authorize_url = 'https://api.twitter.com/oauth/authorize',
+#    base_url = 'https://api.twitter.com/1.1/')
 
-#print twitter_api
+request_token, request_token_secret = twitter.get_request_token()
+authorize_url = twitter.get_authorize_url(request_token)
 
+print 'Visit this URL in your browser: ' + authorize_url
 
-def twitter_trends(twitter_api, woe_id):
-# Prefix ID with the underscore for query string parameterization.
-# Without the underscore, the twitter package appends the ID value
-# to the URL itself as a special-case keyword argument.
-    return twitter_api.trends.place(_id=woe_id)
-# Sample usage
-twitter_api = oauth_login()
-# See https://dev.twitter.com/docs/api/1.1/get/trends/place and
-# http://developer.yahoo.com/geo/geoplanet/ for details on
-# Yahoo! Where On Earth ID
-WORLD_WOE_ID = 1
-world_trends = twitter_trends(twitter_api, WORLD_WOE_ID)
-print json.dumps(world_trends, indent=1)
-US_WOE_ID = 23424977
-us_trends = twitter_trends(twitter_api, US_WOE_ID)
-print json.dumps(us_trends, indent=1)
+#This opens firefox-esr new window for the PIN code
+subprocess.call(["firefox-esr --new-window " + authorize_url], shell=True)
+pin = raw_input('Enter PIN from browser: ')  # `input` if using Python 3!
+
+session = twitter.get_auth_session(request_token,
+                                   request_token_secret,
+                                   method='POST',
+                                   data={'oauth_verifier': pin})
+
+params = {  # Include retweets
+          'count': 10, # 10 tweets
+          'q': '"ufo"',
+          'lang': 'en'} #string to search
+
+r = session.get('search/tweets.json', params=params)
+#print r.json n
+
+# ?q=ufo&result_type=recent
+#decoded = json.loads(r)
+count = 1
+for tweet in r.json()['statuses']:
+    #handle = tweet['user']['screen_name']
+    #text = tweet['text']
+    print count, ')' + tweet['user']['screen_name'] + ' - ' + tweet['text']
+    print '\n'
+    count = count + 1
+#for i, tweet in enumerate(r.json(), 1):
+    #handle = tweet['user']['screen_name']
+    #text = tweet['text']
+    #print(u'{0}. @{1} - {2}'.format(i, handle, text))
+
+    #ryan added this
+#print json.dumps(r.json(), sort_keys=True, indent=4, separators=(',', ': '))
