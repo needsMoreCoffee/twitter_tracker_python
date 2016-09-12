@@ -54,3 +54,23 @@ for tweet in r.json()['statuses']:
 
     #ryan added this
 #print json.dumps(r.json(), sort_keys=True, indent=4, separators=(',', ': '))
+
+#this function writes our returned data into a HTML file to be displayed
+def webpage():
+    html_str = """
+    <html>
+     <head>
+     <!-- refreash the page in the browser -->
+     <meta http-equiv="refresh" content="3" >
+     </head>
+     <body>
+
+     </body>
+     </html>
+     """
+
+     Html_file= open("index.html","w")
+     Html_file.write(html_str)
+     Html_file.close()
+
+     subprocess.call(["firefox-esr --new-tab" + index.html], shell=True)
