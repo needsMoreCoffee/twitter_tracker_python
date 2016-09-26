@@ -79,6 +79,6 @@ def openpage():
      subprocess.call(["firefox-esr --new-tab" + index.html], shell=True)
 
 def main():
-
+    authit()
 
 main()
