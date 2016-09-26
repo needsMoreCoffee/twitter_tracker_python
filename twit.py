@@ -47,13 +47,6 @@ for tweet in r.json()['statuses']:
     print count, ')' + tweet['user']['screen_name'] + ' - ' + tweet['text']
     print '\n'
     count = count + 1
-#for i, tweet in enumerate(r.json(), 1):
-    #handle = tweet['user']['screen_name']
-    #text = tweet['text']
-    #print(u'{0}. @{1} - {2}'.format(i, handle, text))
-
-    #ryan added this
-#print json.dumps(r.json(), sort_keys=True, indent=4, separators=(',', ': '))
 
 #this function writes our returned data into a HTML file to be displayed
 def webpage():
