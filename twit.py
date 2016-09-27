@@ -51,9 +51,9 @@ for tweet in authitdata.json()['statuses']:
     #text = tweet['text']
     datastring = []
     datastring.append = count, ')' + tweet['user']['screen_name'] + ' - ' + tweet['text'] + "<br>"
+    count = count + 1
     #print count, ')' + tweet['user']['screen_name'] + ' - ' + tweet['text']
     #print '\n'
-    count = count + 1
 webpage(datastring)
 #this function writes our returned data into a HTML file to be displayed
 def webpage(ourdata):
@@ -65,9 +65,8 @@ def webpage(ourdata):
      <meta http-equiv="refresh" content="3" >
      </head>
      <body>""
-     + "<p>" + outdata + "</p>" +
-
-      ""</body>
+     + "<center><p>" + outdata + "</p></center>" +
+     ""</body>
      </html>
      ""
 
