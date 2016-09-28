@@ -54,8 +54,8 @@ def digdata(authitdata):
     for tweet in authitdata.json()['statuses']:
         #handle = tweet['user']['screen_name']
         #text = tweet['text']
-        killunicode(tweet)
-        tweets = count, str(')' + tweet['user']['screen_name']) + ' - ' + tweet['text'] + "<br>"
+        encodedtweet = killunicode(tweet)
+        tweets = count, ')' + encodedtweet['user']['screen_name'] + ' - ' + encodedtweet['text'] + "<br>"
         datastring = []
         datastring.append(tweets)
         count = count + 1
@@ -70,9 +70,9 @@ def webpage(ourdata):
     <html>
     <head>
     <!-- refreash the page in the browser over and over to load our new data every few minutes-->
-    <meta http-equiv="refresh" content="3" >
+    <meta http-equiv="refresh" content="10" >
     </head>
-    <body>''' + "<center><p>" + str(ourdata) + "</p></center>" + '</body> </html>'
+    <body>''' + '<center><img src="ad-ufora.gif"></img></center>' + "<center><p>" + str(ourdata) + "</p></center>" + '</body> </html>'
 
     htmlfile = open("index.html","w")
     htmlfile.write(html_str)
