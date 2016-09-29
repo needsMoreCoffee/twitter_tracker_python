@@ -1,5 +1,6 @@
 import json
 import subprocess
+import sched, time
 from mylogins import twitter
 
 #see mylogins.py for the data needed to get this working will follow the
@@ -58,7 +59,7 @@ def digdata(authitdata):
         text = tweet['text']
 
         #finish builsing the "tweet" structure
-        tweets = str(count) + "-" + handle + "-" + text + '<br>'
+        tweets = '<div id = "tweetboxes">' + str(count) + "-" + handle + "-" + text + '</div>' + '<br>'
         #decode to ascII
         encodedtweet = [str(unicodes.encode("ascii", "ignore")) for unicodes in tweets]
         #join everything together looks like --> d,d,g,d,s,df,g,..no good. makes a string now
@@ -69,7 +70,6 @@ def digdata(authitdata):
         count = count + 1
     #combine everything into one single long string from everything from the loop
     combines_datastring = ''.join (str(e) for e in datastring)
-    print "datastring ---->", combines_datastring
 
     webpage(combines_datastring)
 
@@ -79,6 +79,7 @@ def webpage(ourdata):
     html_str = '''
     <html>
     <head>
+    <LINK REL=StyleSheet HREF="style.css" TYPE="text/css">
     <!-- refreash the page in the browser over and over to load our new data every few minutes-->
     <meta http-equiv="refresh" content="10" >
     </head>
@@ -106,7 +107,7 @@ def webpage(ourdata):
         pass
 
 def openpage():
-     subprocess.call(["firefox-esr --new-tab" + "index.html"], shell=True)
+     subprocess.Popen(["firefox-esr --new-tab index.html"], shell=True)
 
 def main():
     authit()
