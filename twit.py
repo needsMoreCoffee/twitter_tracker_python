@@ -44,24 +44,34 @@ def authit():
     digdata(r)
 
 def killunicode(tweetdata):
-    tweetdata = [str(unicodes.encode("ascii", "ignore")) for unicodes in tweetdata]
+    tweetdata
     return tweetdata
 
 
 def digdata(authitdata):
 #Start sorting the data here and loading it into strings
     count = 1
+    datastring = []
     for tweet in authitdata.json()['statuses']:
-        #handle = tweet['user']['screen_name']
-        #text = tweet['text']
-        encodedtweet = killunicode(tweet)
-        tweets = count, ')' + encodedtweet['user']['screen_name'] + ' - ' + encodedtweet['text'] + "<br>"
-        datastring = []
-        datastring.append(tweets)
+
+        handle = tweet['user']['screen_name']
+        text = tweet['text']
+
+        #finish builsing the "tweet" structure
+        tweets = str(count) + "-" + handle + "-" + text + '<br>'
+        #decode to ascII
+        encodedtweet = [str(unicodes.encode("ascii", "ignore")) for unicodes in tweets]
+        #join everything together looks like --> d,d,g,d,s,df,g,..no good. makes a string now
+        finishedtweet = ''.join (str(e) for e in encodedtweet)
+
+        datastring.append(finishedtweet)
+
         count = count + 1
-        #print count, ')' + tweet['user']['screen_name'] + ' - ' + tweet['text']
-        #print '\n'
-    webpage(datastring)
+    #combine everything into one single long string from everything from the loop
+    combines_datastring = ''.join (str(e) for e in datastring)
+    print "datastring ---->", combines_datastring
+
+    webpage(combines_datastring)
 
 
 def webpage(ourdata):
@@ -72,7 +82,14 @@ def webpage(ourdata):
     <!-- refreash the page in the browser over and over to load our new data every few minutes-->
     <meta http-equiv="refresh" content="10" >
     </head>
-    <body>''' + '<center><img src="ad-ufora.gif"></img></center>' + "<center><p>" + str(ourdata) + "</p></center>" + '</body> </html>'
+    <body><center><img src="ad-ufora.gif"></img>
+    <br>
+    <br>
+    </center><center><p>{0}</p></center>
+    </body>
+    </html>'''.format(ourdata)
+
+    #print html_str
 
     htmlfile = open("index.html","w")
     htmlfile.write(html_str)
