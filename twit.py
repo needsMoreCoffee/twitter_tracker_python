@@ -59,7 +59,7 @@ def digdata(authitdata):
         text = tweet['text']
 
         #finish builsing the "tweet" structure
-        tweets = '<div id = "tweetboxes">' + str(count) + "-" + handle + "-" + text + '</div>' + '<br>'
+        tweets = '<div id = "tweetboxes">' + str(count) + ".) - " + handle + "-" + text + '</div>' + '<br>'
         #decode to ascII
         encodedtweet = [str(unicodes.encode("ascii", "ignore")) for unicodes in tweets]
         #join everything together looks like --> d,d,g,d,s,df,g,..no good. makes a string now
