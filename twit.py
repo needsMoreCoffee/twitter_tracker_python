@@ -3,8 +3,8 @@ import subprocess
 import sched, time
 from mylogins import twitter
 
-token_detector = 0
-init_open_counter = 0
+auth_detector_switch = 0
+webpage_launch_switch = 0
 #see mylogins.py for the data needed to get this working will follow the
 #following format.
 # from rauth import OAuth1Service
@@ -17,18 +17,33 @@ init_open_counter = 0
 #    authorize_url = 'https://api.twitter.com/oauth/authorize',
 #    base_url = 'https://api.twitter.com/1.1/')
 
-def authit():
-# check if all ready authed and then ask for pin if not otherwise get more authed data.
-    request_token, request_token_secret = twitter.get_request_token()
-    authorize_url = twitter.get_authorize_url(request_token)
+def getthatdata(our_session_info):
 
     params = {  # Include retweets
               'count': 10, # 10 tweets
               'q': '"ufo"',
               'lang': 'en'} #string to search
 
-    global token_detector
-    if token_detector == 0:
+    #take out session data and PIN from use in authit and grab more JSON, whoot!
+    r = our_session_info.get('search/tweets.json', params=params)
+
+    digdata(r)
+
+def authit():
+# check if all ready authed and then ask for pin if not otherwise get more authed data.
+    global auth_detector_switch
+
+    # do not run the auth process if already done.
+    if  auth_detector_switch == 0:
+
+        request_token, request_token_secret = twitter.get_request_token()
+        authorize_url = twitter.get_authorize_url(request_token)
+
+        params = {  # Include retweets
+                  'count': 10, # 10 tweets
+                  'q': '"ufo"',
+                  'lang': 'en'} #string to search
+
         print 'Visit this URL in your browser: ' + authorize_url
         #This opens firefox-esr new window for the PIN code
         subprocess.call(["firefox-esr --new-window " + authorize_url], shell=True)
@@ -38,36 +53,16 @@ def authit():
                                 request_token_secret,
                                 method='POST',
                                 data={'oauth_verifier': pin})
+        #switch of fucntions IF statement after authed
+        auth_detector_switch += 1
 
-
-
-        r = session.get('search/tweets.json', params=params)
-        token_detector += 1
-
-    else:
-
-        session = twitter.get_auth_session(request_token,
-                                request_token_secret,
-                                method='POST',
-                                data={'oauth_verifier': ourpin})
-
-        params = {  # Include retweets
-                  'count': 10, # 10 tweets
-                  'q': '"ufo"',
-                  'lang': 'en'} #string to search
-
-        r = session.get('search/tweets.json', params=params)
-    ourpin = pin 
-    digdata(r)
-
-def killunicode(tweetdata):
-    tweetdata
-    return tweetdata
+        getthatdata(session)
 
 
 def digdata(authitdata):
 #Start sorting the data here and loading it into strings
-    count = 1
+    global webpage_launch_switch
+    count = 0
     datastring = []
     for tweet in authitdata.json()['statuses']:
 
@@ -82,20 +77,18 @@ def digdata(authitdata):
         finishedtweet = ''.join (str(e) for e in encodedtweet)
 
         datastring.append(finishedtweet)
-
-        count = count + 1
+        count += 1
     #combine everything into one single long string from everything from the loop
     combines_datastring = ''.join (str(e) for e in datastring)
 
-    webpage(combines_datastring)
+    #Skip opening page if already open
+    if webpage_launch_switch == 0:
+        webpage(combines_datastring)
+        webpage_launch_switch += 1
+
+    #keep passing the session info to the twitter API and rewrite the HTML
     time.sleep(10)
     authit()
-
-#def runoncecounter():
-#    if counter == None:
-#        counter = 1
-#        return counter
-
 
 def webpage(ourdata):
 
@@ -118,15 +111,6 @@ def webpage(ourdata):
     htmlfile = open("index.html","w")
     htmlfile.write(html_str)
     htmlfile.close()
-
-# check to see if the webpage has been opened in a
-# browser first otherwise skip it
-    global init_open_counter
-    if init_open_counter == 0:
-        openpage()
-        init_open_counter += 1
-    else:
-        pass
 
 def openpage():
      subprocess.Popen(["firefox-esr --new-tab index.html"], shell=True)
