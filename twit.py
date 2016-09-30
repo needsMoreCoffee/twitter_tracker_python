@@ -25,43 +25,51 @@ def getthatdata(our_session_info):
               'lang': 'en'} #string to search
 
     #take out session data and PIN from use in authit and grab more JSON, whoot!
-    r = our_session_info.get('search/tweets.json', params=params)
+    response = our_session_info.get('search/tweets.json', params=params)
 
-    digdata(r)
+    digdata(response)
 
 def authit():
 # check if all ready authed and then ask for pin if not otherwise get more authed data.
-    global auth_detector_switch
 
+
+    def get_that_pin():
+
+        global auth_detector_switch
     # do not run the auth process if already done.
-    if  auth_detector_switch == 0:
+        if  auth_detector_switch == 0:
 
-        request_token, request_token_secret = twitter.get_request_token()
-        authorize_url = twitter.get_authorize_url(request_token)
+            params = {  # Include retweets
+                      'count': 10, # 10 tweets
+                      'q': '"ufo"',
+                      'lang': 'en'} #string to search
 
-        params = {  # Include retweets
-                  'count': 10, # 10 tweets
-                  'q': '"ufo"',
-                  'lang': 'en'} #string to search
+            print 'Visit this URL in your browser: ' + authorize_url
+            #This opens firefox-esr new window for the PIN code
+            subprocess.call(["firefox-esr --new-window " + authorize_url], shell=True)
+            pin = raw_input('Enter PIN from browser: ')  # `input` if using Python 3!
 
-        print 'Visit this URL in your browser: ' + authorize_url
-        #This opens firefox-esr new window for the PIN code
-        subprocess.call(["firefox-esr --new-window " + authorize_url], shell=True)
-        pin = raw_input('Enter PIN from browser: ')  # `input` if using Python 3!
+            #switch of fucntions IF statement after authed
+            auth_detector_switch += 1
 
-        session = twitter.get_auth_session(request_token,
-                                request_token_secret,
-                                method='POST',
-                                data={'oauth_verifier': pin})
-        #switch of fucntions IF statement after authed
-        auth_detector_switch += 1
+            return pin
 
-        getthatdata(session)
+    request_token, request_token_secret = twitter.get_request_token()
+    authorize_url = twitter.get_authorize_url(request_token)
 
+    pin = get_that_pin()
+    session = twitter.get_auth_session(request_token,
+                            request_token_secret,
+                            method='POST',
+                            data={'oauth_verifier': pin})
+
+
+    getthatdata(session)
 
 def digdata(authitdata):
 #Start sorting the data here and loading it into strings
     global webpage_launch_switch
+
     count = 0
     datastring = []
     for tweet in authitdata.json()['statuses']:
