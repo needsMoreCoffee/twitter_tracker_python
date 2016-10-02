@@ -5,6 +5,9 @@ from mylogins import twitter
 
 auth_detector_switch = 0
 webpage_launch_switch = 0
+request_token_switch = 0
+session_switch = 0
+webpage_launch_switch = 0
 #see mylogins.py for the data needed to get this working will follow the
 #following format.
 # from rauth import OAuth1Service
@@ -29,47 +32,68 @@ def getthatdata(our_session_info):
 
     digdata(response)
 
+def get_that_pin(auth_url):
+    global auth_detector_switch
+    global pin
+    while  auth_detector_switch == 0:
+
+        subprocess.call(["firefox-esr --new-window " + auth_url], shell=True)
+        pin = raw_input('Enter PIN from browser: ')  # `input` if using Python 3!
+        #switch of fucntions IF statement after authed
+
+        auth_detector_switch += 1
+        print "detecter switch", auth_detector_switch
+        print "get that pin if pin now"
+        return pin
+
+    print "get_that_pin outside of the while. Your pin is ", pin
+    return pin
+
+def get_tokens_and_keep_them():
+    global request_token_switch
+    global rt
+    global rts
+    while request_token_switch == 0:
+#        request_token, request_token_secret = twitter.get_request_token()
+        request_token, request_token_secret = twitter.get_request_token()
+        rt, rts = request_token, request_token_secret
+        request_token_switch += 1
+        print "ran the get_tokens_and_keep_them"
+        print "get_tokens_and_keep_them", rt, rts
+        return rt, rts
+    return rt,rts
+
 def authit():
-# check if all ready authed and then ask for pin if not otherwise get more authed data.
+    # check if all ready authed and then ask for pin if not otherwise get more authed data.
+    global session_switch
+    global session
 
+    rt, rts = get_tokens_and_keep_them()
+    print "print authit tokens", rt, rts
+    authorize_url = twitter.get_authorize_url(rt)
 
-    def get_that_pin():
+    #params = {  # Include retweets
+    #            'count': 10, # 10 tweets
+    #            'q': '"ufo"',
+    #            'lang': 'en'} #string to search
 
-        global auth_detector_switch
-    # do not run the auth process if already done.
-        if  auth_detector_switch == 0:
+    #Get the session informaiton only once
+    while session_switch == 0:
+        session = twitter.get_auth_session(rt,
+                                           rts,
+                                           method='POST',
+                                           data={'oauth_verifier': get_that_pin(authorize_url)})
+        session_switch += 1
+        getthatdata(session)
 
-            params = {  # Include retweets
-                      'count': 10, # 10 tweets
-                      'q': '"ufo"',
-                      'lang': 'en'} #string to search
-
-            print 'Visit this URL in your browser: ' + authorize_url
-            #This opens firefox-esr new window for the PIN code
-            subprocess.call(["firefox-esr --new-window " + authorize_url], shell=True)
-            pin = raw_input('Enter PIN from browser: ')  # `input` if using Python 3!
-
-            #switch of fucntions IF statement after authed
-            auth_detector_switch += 1
-
-            return pin
-
-    request_token, request_token_secret = twitter.get_request_token()
-    authorize_url = twitter.get_authorize_url(request_token)
-
-    pin = get_that_pin()
-    session = twitter.get_auth_session(request_token,
-                            request_token_secret,
-                            method='POST',
-                            data={'oauth_verifier': pin})
-
+    print session
 
     getthatdata(session)
 
 def digdata(authitdata):
 #Start sorting the data here and loading it into strings
     global webpage_launch_switch
-
+    global combines_datastring
     count = 0
     datastring = []
     for tweet in authitdata.json()['statuses']:
@@ -89,10 +113,12 @@ def digdata(authitdata):
     #combine everything into one single long string from everything from the loop
     combines_datastring = ''.join (str(e) for e in datastring)
 
+    webpage(combines_datastring)
     #Skip opening page if already open
-    if webpage_launch_switch == 0:
-        webpage(combines_datastring)
+    while webpage_launch_switch == 0:
+        openpage()
         webpage_launch_switch += 1
+        print "webpage launh while statement should run only once."
 
     #keep passing the session info to the twitter API and rewrite the HTML
     time.sleep(10)
