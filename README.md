@@ -14,6 +14,6 @@ Download and navigate into the scripts directory and then run python twit.py
 json
 subprocess
 mylogins import twitter
-* Check the twit.py comments for how this file should look. Contains the Twitter tokens needed to connect to the AP I
+* Check the twit.py comments for how this file should look. Contains the Twitter tokens needed to connect to the API
 
 
