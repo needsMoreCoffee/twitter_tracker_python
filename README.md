@@ -9,7 +9,7 @@ How To Run
 
 Download and navigate into the scripts directory and then run python twit.py
 
-#Modules Needs If Not Already Installed
+#Modules
 
 json
 subprocess
