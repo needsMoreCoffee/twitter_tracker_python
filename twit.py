@@ -35,6 +35,8 @@ def getthatdata(our_session_info):
 def get_that_pin(auth_url):
     global auth_detector_switch
     global pin
+
+    #Ensure you only ask for the PIN one time.
     while  auth_detector_switch == 0:
 
         subprocess.call(["firefox-esr --new-window " + auth_url], shell=True)
@@ -53,8 +55,9 @@ def get_tokens_and_keep_them():
     global request_token_switch
     global rt
     global rts
+
+    #Only get the tokens once
     while request_token_switch == 0:
-#        request_token, request_token_secret = twitter.get_request_token()
         request_token, request_token_secret = twitter.get_request_token()
         rt, rts = request_token, request_token_secret
         request_token_switch += 1
@@ -64,20 +67,16 @@ def get_tokens_and_keep_them():
     return rt,rts
 
 def authit():
-    # check if all ready authed and then ask for pin if not otherwise get more authed data.
     global session_switch
     global session
 
+    #get the request tokens from get_tokens_and_keep_them
     rt, rts = get_tokens_and_keep_them()
     print "print authit tokens", rt, rts
     authorize_url = twitter.get_authorize_url(rt)
 
-    #params = {  # Include retweets
-    #            'count': 10, # 10 tweets
-    #            'q': '"ufo"',
-    #            'lang': 'en'} #string to search
-
-    #Get the session informaiton only once
+    #Get the session informaiton only once using request token and request token secret
+    #as well as the PIN
     while session_switch == 0:
         session = twitter.get_auth_session(rt,
                                            rts,
@@ -85,43 +84,52 @@ def authit():
                                            data={'oauth_verifier': get_that_pin(authorize_url)})
         session_switch += 1
         getthatdata(session)
-
-    print session
-
     getthatdata(session)
 
 def digdata(authitdata):
-#Start sorting the data here and loading it into strings
+    #Start sorting the data here and loading it into strings that in to the HTML doc
     global webpage_launch_switch
     global combines_datastring
     count = 0
     datastring = []
-    for tweet in authitdata.json()['statuses']:
 
+    #for tweet in authitdata.json()['statuses']:
+    #    print tweet
+
+    for tweet in authitdata.json()['statuses']:
         handle = tweet['user']['screen_name']
         text = tweet['text']
 
         #finish builsing the "tweet" structure
-        tweets = '<div id = "tweetboxes">' + str(count) + ".) - " + handle + "-" + text + '</div>' + '<br>'
-        #decode to ascII
+        tweets = '<div id = "tweetboxes">' + str(count) + ".) - " + "<b>" + handle + "</b>" + "-" + text + '</div>' + '<br>'
+
+        #Encode to ascII
         encodedtweet = [str(unicodes.encode("ascii", "ignore")) for unicodes in tweets]
+
         #join everything together looks like --> d,d,g,d,s,df,g,..no good. makes a string now
         finishedtweet = ''.join (str(e) for e in encodedtweet)
 
         datastring.append(finishedtweet)
         count += 1
+
     #combine everything into one single long string from everything from the loop
+    #for each tweet
     combines_datastring = ''.join (str(e) for e in datastring)
 
+    #Writes our webpage HTML to index.html
     webpage(combines_datastring)
-    #Skip opening page if already open
+
+    #Open browser or skip if already open
     while webpage_launch_switch == 0:
         openpage()
         webpage_launch_switch += 1
         print "webpage launh while statement should run only once."
 
-    #keep passing the session info to the twitter API and rewrite the HTML
-    time.sleep(10)
+    #Twitter rate limit to 30 second due to TOS
+    time.sleep(30)
+
+    #grab our stored session data and then pull some more json
+    #and write it to our HTML file
     authit()
 
 def webpage(ourdata):
@@ -131,7 +139,7 @@ def webpage(ourdata):
     <head>
     <LINK REL=StyleSheet HREF="style.css" TYPE="text/css">
     <!-- refreash the page in the browser over and over to load our new data every few minutes-->
-    <meta http-equiv="refresh" content="10" >
+    <meta http-equiv="refresh" content="31" >
     </head>
     <body><center><img src="ad-ufora.gif"></img>
     <br>
