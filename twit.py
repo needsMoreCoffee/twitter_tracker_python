@@ -44,11 +44,8 @@ def get_that_pin(auth_url):
         #switch of fucntions IF statement after authed
 
         auth_detector_switch += 1
-        print "detecter switch", auth_detector_switch
-        print "get that pin if pin now"
         return pin
 
-    print "get_that_pin outside of the while. Your pin is ", pin
     return pin
 
 def get_tokens_and_keep_them():
@@ -61,8 +58,6 @@ def get_tokens_and_keep_them():
         request_token, request_token_secret = twitter.get_request_token()
         rt, rts = request_token, request_token_secret
         request_token_switch += 1
-        print "ran the get_tokens_and_keep_them"
-        print "get_tokens_and_keep_them", rt, rts
         return rt, rts
     return rt,rts
 
@@ -72,7 +67,6 @@ def authit():
 
     #get the request tokens from get_tokens_and_keep_them
     rt, rts = get_tokens_and_keep_them()
-    print "print authit tokens", rt, rts
     authorize_url = twitter.get_authorize_url(rt)
 
     #Get the session informaiton only once using request token and request token secret
@@ -92,9 +86,6 @@ def digdata(authitdata):
     global combines_datastring
     count = 0
     datastring = []
-
-    #for tweet in authitdata.json()['statuses']:
-    #    print tweet
 
     for tweet in authitdata.json()['statuses']:
         handle = tweet['user']['screen_name']
@@ -123,7 +114,6 @@ def digdata(authitdata):
     while webpage_launch_switch == 0:
         openpage()
         webpage_launch_switch += 1
-        print "webpage launh while statement should run only once."
 
     #Twitter rate limit to 30 second due to TOS
     time.sleep(30)
@@ -147,8 +137,6 @@ def webpage(ourdata):
     </center><center><p>{0}</p></center>
     </body>
     </html>'''.format(ourdata)
-
-    #print html_str
 
     htmlfile = open("index.html","w")
     htmlfile.write(html_str)
