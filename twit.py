@@ -84,15 +84,19 @@ def digdata(authitdata):
     #Start sorting the data here and loading it into strings that in to the HTML doc
     global webpage_launch_switch
     global combines_datastring
-    count = 0
+    count = 1
     datastring = []
 
     for tweet in authitdata.json()['statuses']:
+        #print json.dumps(tweet, sort_keys=True, indent=4, separators=(',', ': '))
         handle = tweet['user']['screen_name']
         text = tweet['text']
-
+        profile_image = tweet['user']['profile_image_url']
+        profile_image_html = '<img src = "' + profile_image + '" id = "profile_pics"><br>'
+        print profile_image
         #finish builsing the "tweet" structure
-        tweets = '<div id = "tweetboxes">' + str(count) + ".) - " + "<b>" + handle + "</b>" + "-" + text + '</div>' + '<br>'
+
+        tweets = '<div id = "tweetboxes">' + profile_image_html + str(count) + ".) - " + "<b>" + handle + "</b>" + "-" + text + '</div>' + '<br><br>'
 
         #Encode to ascII
         encodedtweet = [str(unicodes.encode("ascii", "ignore")) for unicodes in tweets]

@@ -1,9 +1,14 @@
 body{
-  background-color: #F5A9D0;
+  background-color: #F6E3CE ;
 }
 
 #tweetboxes {
   border-radius: 25px;
-    border: 2px solid #73AD21;
+    border: 3px solid #3366FF;
     padding: 20px;
+}
+
+#profile_pics{
+  float: left;
+  border-radius: 50%
 }
