@@ -23,7 +23,7 @@ webpage_launch_switch = 0
 def getthatdata(our_session_info):
 
     params = {  # Include retweets
-              'count': 10, # 10 tweets
+              'count': 50, # 10 tweets
               'q': '"ufo"',
               'lang': 'en'} #string to search
 
@@ -88,24 +88,44 @@ def digdata(authitdata):
     datastring = []
 
     for tweet in authitdata.json()['statuses']:
-        #print json.dumps(tweet, sort_keys=True, indent=4, separators=(',', ': '))
-        handle = tweet['user']['screen_name']
-        text = tweet['text']
-        profile_image = tweet['user']['profile_image_url']
-        profile_image_html = '<img src = "' + profile_image + '" id = "profile_pics"><br>'
-        print profile_image
-        #finish builsing the "tweet" structure
+        #This is how we can rid of the retweets.
+        if tweet['retweet_count'] == 0:
+            #print json.dumps(tweet, sort_keys=True, indent=4, separators=(',', ': '))
 
-        tweets = '<div id = "tweetboxes">' + profile_image_html + str(count) + ".) - " + "<b>" + handle + "</b>" + "-" + text + '</div>' + '<br><br>'
+            #check that the username doesn't have UFO in the name every other crazy on the new-tab\
+            #talking about UFOs does this.
+            #check to see if the tweet['retweet_count'] count is over 1 and then skip. Retweets are not
+            #going to be valid UFO encounters
 
-        #Encode to ascII
-        encodedtweet = [str(unicodes.encode("ascii", "ignore")) for unicodes in tweets]
+            #Now ignore retweets. They couldn't be UFO sightings
 
-        #join everything together looks like --> d,d,g,d,s,df,g,..no good. makes a string now
-        finishedtweet = ''.join (str(e) for e in encodedtweet)
+            handle = tweet['user']['screen_name']
+            retweet = tweet['retweeted']
+            retweetcount = tweet['retweet_count']
+            text = tweet['text']
+            profile_image = tweet['user']['profile_image_url']
 
-        datastring.append(finishedtweet)
-        count += 1
+            print "screenname is :", tweet['user']['screen_name']
+            print "count for retweets", retweetcount
+            print "Is this a retweet:", retweet
+
+            profile_image_html = '<img src = "' + profile_image + '" id = "profile_pics"><br>'
+            #print profile_image
+            #finish builsing the "tweet" structure
+
+            tweets = '<div id = "tweetboxes">' + profile_image_html + str(retweetcount)+ + ')' + str(count) + ".) - " + "<b>" + handle + "</b>" + "-" + text + '</div>' + '<br><br>'
+
+            #Encode to ascII
+            encodedtweet = [str(unicodes.encode("ascii", "ignore")) for unicodes in tweets]
+
+            #join everything together looks like --> d,d,g,d,s,df,g,..no good. makes a string now
+            finishedtweet = ''.join (str(e) for e in encodedtweet)
+
+            datastring.append(finishedtweet)
+            count += 1
+        else:
+            pass
+
 
     #combine everything into one single long string from everything from the loop
     #for each tweet
