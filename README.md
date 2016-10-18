@@ -5,7 +5,8 @@ This program was built in order to track UFO sightings on Twitter and load them 
 #Motivation
 
 This app was built in pursuit of tracking communications of a businesses competitors on Twitter using different search terms. The idea is about finding dissatisfied customers and customers in the discovery phase that are calling on the competitor business using their @handle .Even those asking about another companies services publicly could be potential customers. Unlike on Twitter this feed is constant and you can do much more with the data.
-How To Run
+
+#How To Run
 
 Download and navigate into the scripts directory and then run python twit.py
 
