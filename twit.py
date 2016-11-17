@@ -113,7 +113,7 @@ def digdata(authitdata):
             #print profile_image
             #finish builsing the "tweet" structure
 
-            tweets = '<div id = "tweetboxes">' + profile_image_html + str(retweetcount)+ + ')' + str(count) + ".) - " + "<b>" + handle + "</b>" + "-" + text + '</div>' + '<br><br>'
+            tweets = '<div id = "tweetboxes">' + profile_image_html + str(retweetcount)+  ')' + str(count) + ".) - " + "<b>" + handle + "</b>" + "-" + text + '</div>' + '<br><br>'
 
             #Encode to ascII
             encodedtweet = [str(unicodes.encode("ascii", "ignore")) for unicodes in tweets]
