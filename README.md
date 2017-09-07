@@ -18,6 +18,17 @@ subprocess
 
 mylogins.py
 
-* Check the twit.py comments for how this file should look. Contains the Twitter tokens needed to connect to the API
+## Mylogin.py File Below - Fill Out The Infomation From Your Account.
 
+```
+# from rauth import OAuth1Service
+#twitter = OAuth1Service(
+#    name = 'twitter',
+#    consumer_key = '',
+#    consumer_secret = '',
+#    request_token_url = 'https://api.twitter.com/oauth/request_token',
+#    access_token_url = 'https://api.twitter.com/oauth/access_token',
+#    authorize_url = 'https://api.twitter.com/oauth/authorize',
+#    base_url = 'https://api.twitter.com/1.1/')
 
+```
