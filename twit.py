@@ -8,17 +8,6 @@ webpage_launch_switch = 0
 request_token_switch = 0
 session_switch = 0
 webpage_launch_switch = 0
-#see mylogins.py for the data needed to get this working will follow the
-#following format.
-# from rauth import OAuth1Service
-#twitter = OAuth1Service(
-#    name = 'twitter',
-#    consumer_key = '',
-#    consumer_secret = '',
-#    request_token_url = 'https://api.twitter.com/oauth/request_token',
-#    access_token_url = 'https://api.twitter.com/oauth/access_token',
-#    authorize_url = 'https://api.twitter.com/oauth/authorize',
-#    base_url = 'https://api.twitter.com/1.1/')
 
 def getthatdata(our_session_info):
 
