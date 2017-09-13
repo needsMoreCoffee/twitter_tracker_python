@@ -79,7 +79,7 @@ def digdata(authitdata):
     for tweet in authitdata.json()['statuses']:
         #This is how we can rid of the retweets.
         if tweet['retweet_count'] == 0:
-            #print json.dumps(tweet, sort_keys=True, indent=4, separators=(',', ': '))
+            print json.dumps(tweet, sort_keys=True, indent=4, separators=(',', ': '))
 
             #check that the username doesn't have UFO in the name every other crazy on the new-tab\
             #talking about UFOs does this.
