@@ -14,8 +14,9 @@ class Twitterbot:
         self.auth_detector_switch = 0
         self.request_token_switch = 0
         self.session_switch = 0
+        # self.session =
 
-    def getthatdata(self, our_session_info):
+    def getthatdata(self):
 
         params = {  # Include retweets
                   'count': 50, # 10 tweets
@@ -23,9 +24,9 @@ class Twitterbot:
                   'lang': 'en'} #string to search
 
         #take out session data and PIN from use in authit and grab more JSON, whoot!
-        response = our_session_info.get('search/tweets.json', params=params)
+        response = self.session.get('search/tweets.json', params=params)
 
-        digdata(response)
+        # digdata(response)
 
     def get_that_pin(self, auth_url, pin):
         # global pin
@@ -48,37 +49,43 @@ class Twitterbot:
         global rts
 
         #Only get the tokens once
-        while request_token_switch == 0:
+        while self.request_token_switch == 0:
             request_token, request_token_secret = twitter.get_request_token()
             rt, rts = request_token, request_token_secret
-            request_token_switch += 1
+            self.request_token_switch += 1
             return rt, rts
         return rt,rts
 
-    def authit():
+    def authit(self):
         # global session_switch
-        global session
+        # global session
 
         #get the request tokens from get_tokens_and_keep_them
-        rt, rts = get_tokens_and_keep_them()
+        rt, rts = self.get_tokens_and_keep_them()
         authorize_url = twitter.get_authorize_url(rt)
 
         #Get the session informaiton only once using request token and request token secret
         #as well as the PIN
         while self.session_switch == 0:
-            session = twitter.get_auth_session(rt,
+            self.session = twitter.get_auth_session(rt,
                                                rts,
                                                method='POST',
-                                               data={'oauth_verifier': get_that_pin(authorize_url)})
+                                               data={'oauth_verifier': self.get_that_pin(authorize_url)})
             self.session_switch += 1
-            getthatdata(session)
-        getthatdata(session)
+             # getthatdata(session)
+        # getthatdata(session)
+
+twit = Twitterbot()
+
 class DataThing:
+    def __init__(self):
+        self.webpage_launch_switch = 0
+        self.combines_datastring = []
 
     def digdata(self, authitdata):
         #Start sorting the data here and loading it into strings that in to the HTML doc
-        global webpage_launch_switch
-        global combines_datastring
+        # global webpage_launch_switch
+        # global combines_datastring
         count = 1
         datastring = []
 
@@ -139,7 +146,7 @@ class DataThing:
 
         #grab our stored session data and then pull some more json
         #and write it to our HTML file
-        authit()
+        # authit()
 
     def webpage(self, ourdata):
 
@@ -164,7 +171,12 @@ class DataThing:
     def openpage(self):
          subprocess.Popen(["firefox-esr --new-tab index.html"], shell=True)
 
+mydata = DataThing()
 def main(self):
     authit()
 
-main()
+if __name__ == '__main__':
+   twit.authit()
+
+   mydata.getthatdata()
+   mydata.digdata()
