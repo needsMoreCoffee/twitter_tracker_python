@@ -5,6 +5,7 @@ from mylogins import twitter
 
 
 class Twitterbot:
+
     def __init__(self):
         self.auth_detector_switch = 0
         self.request_token_switch = 0
@@ -56,6 +57,7 @@ class Twitterbot:
             self.session_switch += 1
 
 twit = Twitterbot()
+
 
 class DataThing:
     def __init__(self):
