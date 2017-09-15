@@ -3,18 +3,12 @@ import subprocess
 import sched, time
 from mylogins import twitter
 
-# auth_detector_switch = 0
-webpage_launch_switch = 0
-# request_token_switch = 0
-# session_switch = 0
-webpage_launch_switch = 0
 
 class Twitterbot:
     def __init__(self):
         self.auth_detector_switch = 0
         self.request_token_switch = 0
         self.session_switch = 0
-        # self.session =
 
     def getthatdata(self):
 
@@ -26,29 +20,21 @@ class Twitterbot:
         #take out session data and PIN from use in authit and grab more JSON, whoot!
         response = self.session.get('search/tweets.json', params=params)
 
-        # digdata(response)
+        return response
 
-    def get_that_pin(self, auth_url, pin):
-        # global pin
+    def get_that_pin(self, auth_url):
 
-        #Ensure you only ask for the PIN one time.
-        while  auth_detector_switch == 0:
+        while  self.auth_detector_switch == 0:
 
             subprocess.call(["firefox-esr --new-window " + auth_url], shell=True)
             pin = raw_input('Enter PIN from browser: ')  # `input` if using Python 3!
-            #switch of fucntions IF statement after authed
-
-            auth_detector_switch += 1
+            self.auth_detector_switch += 1
             return pin
 
         return pin
 
     def get_tokens_and_keep_them(self):
-        # global request_token_switch
-        global rt
-        global rts
 
-        #Only get the tokens once
         while self.request_token_switch == 0:
             request_token, request_token_secret = twitter.get_request_token()
             rt, rts = request_token, request_token_secret
@@ -57,23 +43,17 @@ class Twitterbot:
         return rt,rts
 
     def authit(self):
-        # global session_switch
-        # global session
 
-        #get the request tokens from get_tokens_and_keep_them
         rt, rts = self.get_tokens_and_keep_them()
         authorize_url = twitter.get_authorize_url(rt)
 
         #Get the session informaiton only once using request token and request token secret
-        #as well as the PIN
         while self.session_switch == 0:
             self.session = twitter.get_auth_session(rt,
                                                rts,
                                                method='POST',
                                                data={'oauth_verifier': self.get_that_pin(authorize_url)})
             self.session_switch += 1
-             # getthatdata(session)
-        # getthatdata(session)
 
 twit = Twitterbot()
 
@@ -84,8 +64,6 @@ class DataThing:
 
     def digdata(self, authitdata):
         #Start sorting the data here and loading it into strings that in to the HTML doc
-        # global webpage_launch_switch
-        # global combines_datastring
         count = 1
         datastring = []
 
@@ -93,13 +71,6 @@ class DataThing:
             #This is how we can rid of the retweets.
             if tweet['retweet_count'] == 0:
                 #print json.dumps(tweet, sort_keys=True, indent=4, separators=(',', ': '))
-
-                #check that the username doesn't have UFO in the name every other crazy on the new-tab\
-                #talking about UFOs does this.
-                #check to see if the tweet['retweet_count'] count is over 1 and then skip. Retweets are not
-                #going to be valid UFO encounters
-
-                #Now ignore retweets. They couldn't be UFO sightings
 
                 handle = tweet['user']['screen_name']
                 retweet = tweet['retweeted']
@@ -128,25 +99,9 @@ class DataThing:
             else:
                 pass
 
-
-        #combine everything into one single long string from everything from the loop
-        #for each tweet
         combines_datastring = ''.join (str(e) for e in datastring)
 
-        #Writes our webpage HTML to index.html
-        webpage(combines_datastring)
-
-        #Open browser or skip if already open
-        while webpage_launch_switch == 0:
-            openpage()
-            webpage_launch_switch += 1
-
-        #Twitter rate limit to 30 second due to TOS
-        time.sleep(30)
-
-        #grab our stored session data and then pull some more json
-        #and write it to our HTML file
-        # authit()
+        return combines_datastring
 
     def webpage(self, ourdata):
 
@@ -172,11 +127,11 @@ class DataThing:
          subprocess.Popen(["firefox-esr --new-tab index.html"], shell=True)
 
 mydata = DataThing()
-def main(self):
-    authit()
 
 if __name__ == '__main__':
-   twit.authit()
 
-   mydata.getthatdata()
-   mydata.digdata()
+   twit.authit()
+   data = twit.getthatdata()
+   combined_parsed_data = mydata.digdata(data)
+   mydata.webpage(combined_parsed_data)
+   mydata.openpage()
