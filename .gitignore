@@ -1,2 +1,3 @@
 mylogins.py
 *.json
+venv/
