@@ -1,6 +1,3 @@
 mylogins.py
-<<<<<<< HEAD
-venv/
-=======
 *.json
->>>>>>> 4ad07b37f5ba232f741fea9bb825b32529413d6c
+venv/
