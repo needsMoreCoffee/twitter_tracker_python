@@ -18,10 +18,23 @@ text = '"bitcoin" AND "Bitcoin"'
 country = ['US']
 since = 'NOW-60DAYS/DAY'
 until = 'NOW'
+sentiment = 'negative'
+
 
 try:
     # List stories
-    api_response = api_instance.list_time_series(text=text, source_locations_country=country, published_at_start=since, published_at_end=until)
-    print(api_response)
+    api_response = api_instance.list_time_series(text=text, source_locations_country=country, published_at_start=since, published_at_end=until, sentiment_title_polarity = sentiment)
+    print(dir(api_response))
+    print(api_response.time_series)
+    dict = api_response.to_dict
+
+    print(dir(dict))
+    # for v,k in dict:
+        # print(v, k)
+
+    # for i in api_response:
+    #     for k in i:
+    #         print k
+
 except ApiException as e:
     print("Exception when calling DefaultApi->list_time_series: %s\n" % e)
