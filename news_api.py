@@ -13,7 +13,8 @@ class Nynews:
         self.data = []
         self.page = 2
         self.analyser = Analysis()
-        self.api_key = os.environ['NYTIMES_API_KEY']
+        self.api_key = 'put_your_key_here'
+        # self.api_key = os.environ['NYTIMES_API_KEY']
 
     def get_data(self):
         mydata = []
@@ -28,92 +29,30 @@ class Nynews:
             time.sleep(1.1)
 
 
-        for i in mydata:
-            if 'response' in i:
-                for x in i['response']['docs']:
-                    if 'pub_date' in x:
-                        # print(count)
-                        # print(x['pub_date'])
-                        newdata['id'] = count
-                        newdata['sentiment'] = self.analyser.get_sentiment(x['headline']['main'])
-                        time.sleep(.1)
-                        newdata['pub_date'] = x['pub_date']
-                        newdata['snippet'] = x['snippet']
-                        # print(newdata)
-                        mylist.append(newdata)
-                        # print(newdata)
+        for q in mydata:
+            for x in q['response']['docs']:
+                if 'pub_date' in x:
+                    mylist.append(dict())
+                    mylist[count]['id'] = count
+                    mylist[count]['pub_date'] = x['pub_date']
+                    mylist[count]['snippet'] = x['snippet']
+                    count = count + 1
+                else:
+                    print("no response ? ")
 
-                    else:
-                        print("didn't do anything")
-                        pass
-            else:
-                print("something happened")
-
-        print(mylist)
+        return mylist
 
     def look_at_data(self, data):
 
         for i in data:
-            if 'response' in i:
-                for x in i['response']['docs']:
-                    if 'pub_date' in x:
-                        sentiment_score = self.analyser.get_sentiment(x['headline']['main'])
-                        print("Main Headline: " + x['headline']['main'] + " Published Date: " + str(x['pub_date']) + " Sentiment Rating: " + str(sentiment_score) +
-                        " Sentiment: " + str(self.analyser.convertscore(sentiment_score)) + "\n")
-                    else:
-                        print("didn't do anything")
+            print i
 
-    def test(self, data):
+    def add_sentiment(self, data):
 
         for i in data:
-            if 'response' in i:
-                for x in i['response']['docs']:
-                    if 'pub_date' in x:
-                        sentiment_score = self.analyser.get_sentiment(x['headline']['main'])
-                        print("Main Headline: " + x['headline']['main'] + " Published Date: " + str(x['pub_date']) + " Sentiment Rating: " + str(sentiment_score) +
-                        " Sentiment: " + str(self.analyser.convertscore(sentiment_score)) + "\n")
-                    else:
-                        print("didn't do anything")
+            i['sentiment'] = self.analyser.get_sentiment(i['snippet'])
+            print(i['sentiment'])
 
-    def make_dict(self, data):
-        count = 0
-        newdata = dict()
-        mylist = []
-        print("newsdfsfss")
-        for i in data:
-            if 'response' in i:
-                for x in i['response']['docs']:
-                    if 'pub_date' in x:
-                        # print(count)
-                        # print(x['pub_date'])
-                        newdata['id'] = count
-                        count = count + 1
-                        newdata['sentiment'] = self.analyser.get_sentiment(x['headline']['main'])
-                        newdata['pub_date'] = x['pub_date']
-                        newdata['snippet'] = x['snippet']
-                        # print(newdata)
-                        mylist.append(newdata)
-                        # print(newdata)
+        return data
 
-                    else:
-                        print("didn't do anything")
-                        pass
-            else:
-                print("something happened")
-
-        print(mylist)
-
-                    # if 'pub_date' in x:
-                    #     print(count)
-                    #     print(x['pub_date'])
-                    #     data['id'] = count
-                    #     count + 1
-                    #     data['sentiment'] = self.analyser.get_sentiment(x['headline']['main'])
-                    #     data['pub_date'] = x['pub_date']
-                    #     # print("Main Headline: " + x['headline']['main'] + " Published Date: " + str(x['pub_date']) + " Sentiment Rating: " + str(sentiment_score) +
-                    #     # " Sentiment: " + str(self.analyser.convertscore(sentiment_score)) + "\n")
-                    # else:
-                    #     print("didn't do anything")
-
-
-news_thing = Nynews()
+newsthingy = Nynews()
