@@ -4,7 +4,7 @@
 
 The Market Sentiment Machine will test the news and twitter messages to get headline and tweet sentiment on a company or a crypo currency. Using sentiment and finance data we will test how much market sentiment will drive the market.  
 
-** currently being developed **
+**currently being developed. More of a toolkit in its current state**
 
 This application samples tweets from the twitter sphere and detects sentiment of the users tweets. Used to track a companies online "market sentiment".
 
