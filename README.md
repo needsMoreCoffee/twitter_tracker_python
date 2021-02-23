@@ -4,6 +4,10 @@
 
 The Market Sentiment Machine will test the news and twitter messages to get headline and tweet sentiment on a company or a crypo currency. Using sentiment and finance data we will test how much market sentiment will drive the market.  
 
+In the current condition this is more of a personal toolkit. 
+
+The develop branch is a version of this that looks for 'UFO' text and charts the tweets on a webpage with location to start testing the idea that mass sightings can be tracked online no matter if its a 'UFO' sighting, crime in progress, or other.
+
 **currently being developed. More of a toolkit in its current state**
 
 This application samples tweets from the twitter sphere and detects sentiment of the users tweets. Used to track a companies online "market sentiment".
