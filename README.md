@@ -1,28 +1,34 @@
-# Market Sentiment Machine
+# Market Sentiment Toolkit - Searching terms in Tweet and News data and testing for language sentiment using NLP
 
-## Work in Progress
+The Market Sentiment Machine will test the news and twitter messages to get headline and tweet sentiment on a company or a crypo currency. Using sentiment and finance data we will test how sentiment will drive the stock prices up and down. 
 
-The Market Sentiment Machine will test the news and twitter messages to get headline and tweet sentiment on a company or a crypo currency. Using sentiment and finance data we will test how much market sentiment will drive the market.  
+This application samples tweets and news sources and detects sentiment of the users tweets. Used to track a companies online "market sentiment".
 
-In the current condition this is more of a personal toolkit. 
+## Motivation
 
-The develop branch is a version of this that looks for 'UFO' text and charts the tweets on a webpage with location to start testing the idea that mass sightings can be tracked online no matter if its a 'UFO' sighting, crime in progress, or other.
+My motivation is to see if there is a correlation between sentiment on twitter or news and the stock market.
 
-**currently being developed. More of a toolkit in its current state**
+# How To Run The Tools
 
-This application samples tweets from the twitter sphere and detects sentiment of the users tweets. Used to track a companies online "market sentiment".
+**market_data.py** - Run this script to chart your stock for the day. 
 
-# Motivation
+**news_sentiment_time_series.py** - This script is used to do in depth research on on many news articles at once and their sentiment. This is close to what isa offered in their stock API docs, but i included here because it is a great resource for watching your stock and picking up on buy/sell sentiment
 
-My motivation is to see if there is a correlation between sentiment on twitter and the stock market.
+**news_api.py** This pulls small snippets or highlight from news articles at NYTimes and then runs through Google NLP sentiment analysis. 
 
-# How To Run
+**Twit.py** - This will search recent Twitter data looking for tweets about your search terms and run through Google NLP sentiment analysis. 
 
-Download and navigate into the scripts directory and then run python twit.py
+**sentiment_thing.py** - twit.py and news_api.py both use this imported to process and return sentiment. Use on your own text if you like.
 
-# Modules
+## Modules
 
 json
+
+matplotlib
+
+python-tk
+
+pandas_datareader
 
 subprocess
 
@@ -32,7 +38,13 @@ twitter
 
 google.cloud
 
-## Mylogin.py File Below - Fill Out The Information From Your Account.
+## Install the following
+
+apt-get install python-tk
+
+### Make the file call Mylogin.py 
+
+Fill Out The Information From Your twitter Account for twit.py
 
 ```
 # from rauth import OAuth1Service
